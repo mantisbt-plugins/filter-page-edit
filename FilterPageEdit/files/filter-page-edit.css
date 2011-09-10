@@ -1,3 +1,9 @@
-.inline-editable {
+.inline-editable, .start-inline-edit {
 	cursor: pointer;	
+}
+
+.start-inline-edit {
+	width: 16px;
+	height: 16px;
+	border: none;
 }

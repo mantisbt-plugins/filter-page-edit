@@ -4,7 +4,7 @@ header ("Content-Type: text/javascript");
 require_once 'core.php';
 
 $t_icon_path = config_get( 'icon_path' );
-$t_edit_icon_string = '<img class="start-inline-edit" border="0" width="16" height="16" src="' . $t_icon_path . 'update.png"/>';
+$t_edit_icon_string = '<img class="start-inline-edit" src="' . $t_icon_path . 'update.png"/>';
 ?>
 var FilterPageEdit = {
     installCustomFieldEdit : function(fieldName) {
