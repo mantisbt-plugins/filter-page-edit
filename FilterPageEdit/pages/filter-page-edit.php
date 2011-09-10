@@ -7,7 +7,7 @@ $t_icon_path = config_get( 'icon_path' );
 $t_edit_icon_string = '<img class="start-inline-edit" src="' . $t_icon_path . 'update.png"/>';
 ?>
 var FilterPageEdit = {
-    installCustomFieldEdit : function(fieldName) {
+    installCustomFieldEdit : function(fieldId, fieldName) {
         var bugTable = jQuery("#buglist");
         var headerRow = bugTable.find("tr.row-category");
         var customFieldColumn = headerRow.find("td:contains(" + fieldName + ")");
@@ -20,7 +20,7 @@ var FilterPageEdit = {
             var bugId = jQuery(this).val();
             var bugRow = jQuery(this).parent().parent();
             var editableColumn = bugRow.find('td:eq('+customFieldColumnIndex+')')
-            editableColumn.data('bugId', bugId);
+            editableColumn.data('bugId', bugId).data('fieldId', fieldId);
             editableColumn.addClass('inline-editable').click(function() {
                 FilterPageEdit._makeEditable(jQuery(this));
             });
@@ -40,7 +40,8 @@ var FilterPageEdit = {
         var oldText = jQueryCell.text();
         var bugId = jQueryCell.parent();
         jQueryCell.removeClass('inline-editable');
-        jQueryCell.text('').append('<input type="text" value="' + oldText + '" id="inline-' + jQueryCell.data("bugId") +'">');
+        var identifier = 'inline-' + jQueryCell.data("bugId") +'-' + jQueryCell.data('fieldId'); 
+        jQueryCell.text('').append('<input type="text" value="' + oldText + '" id="' + identifier +'" name="' + identifier +'"/>');
         jQueryCell.unbind('click');
     }
 };
@@ -50,7 +51,7 @@ jQuery(document).ready(function() {
 $f_custom_fields = explode( ',' , gpc_get_string( 'fields' ) );
 foreach ( $f_custom_fields as $t_custom_field_id ) {
     $t_custom_field = custom_field_get_definition( $t_custom_field_id );
-    echo "\tFilterPageEdit.installCustomFieldEdit('" . $t_custom_field['name'] ."');\n";
+    echo "\tFilterPageEdit.installCustomFieldEdit('" . $t_custom_field['id'] ."', '" . $t_custom_field['name'] ."');\n";
 }
 ?>
 });
