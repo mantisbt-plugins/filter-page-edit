@@ -52,7 +52,9 @@ var FilterPageEdit = {
                 jQuery('#buglist').find('[id|=inline-' + jQueryCell.data("fieldId")+']').each(function() {
                     submitValue[jQuery(this).attr('id')] =jQuery(this).val();
                 });
-                jQuery.post('<?php echo plugin_page('filter-page-process.php')?>', submitValue);
+                jQuery.post('<?php echo plugin_page('filter-page-process.php')?>', submitValue, function(result) {
+                    window.location.reload(true);
+                });
             });
         }
     }
