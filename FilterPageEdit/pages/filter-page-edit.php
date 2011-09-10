@@ -17,8 +17,10 @@ var FilterPageEdit = {
         var editableColumns = [];
         
         bugTable.find('input[type=checkbox]').each(function() {
+            var bugId = jQuery(this).val();
             var bugRow = jQuery(this).parent().parent();
             var editableColumn = bugRow.find('td:eq('+customFieldColumnIndex+')')
+            editableColumn.data('bugId', bugId);
             editableColumn.addClass('inline-editable').click(function() {
                 FilterPageEdit._makeEditable(jQuery(this));
             });
@@ -36,8 +38,9 @@ var FilterPageEdit = {
     
     _makeEditable: function(jQueryCell) {
         var oldText = jQueryCell.text();
+        var bugId = jQueryCell.parent();
         jQueryCell.removeClass('inline-editable');
-        jQueryCell.text('').append('<input type="text" value="' + oldText + '">');
+        jQueryCell.text('').append('<input type="text" value="' + oldText + '" id="inline-' + jQueryCell.data("bugId") +'">');
         jQueryCell.unbind('click');
     }
 };
