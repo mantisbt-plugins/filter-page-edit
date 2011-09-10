@@ -1,8 +1,12 @@
 <?php 
+form_security_validate( 'filter_page_edit' );
+
 foreach ( $_POST as $f_submitted_change => $f_submitted_value ) {
     
-    if ( strstr($f_submitted_change, 'inline-' !== 0 ) )
+    if ( strpos($f_submitted_change, 'inline-') !== 0 ) {
+        echo "$f_submitted_change\n";
         continue;
+    }
     
     list($t_prefix, $t_field_id, $t_bug_id) = explode( '-', $f_submitted_change);
     
@@ -20,4 +24,6 @@ foreach ( $_POST as $f_submitted_change => $f_submitted_value ) {
      custom_field_set_value( $t_field_id, $t_bug_id, gpc_get_string( $f_submitted_change ) );
      bug_update_date( $t_bug_id );
 }
+
+form_security_purge( 'filter_page_edit' );
 ?>

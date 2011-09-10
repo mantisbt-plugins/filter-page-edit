@@ -6,6 +6,7 @@ require_once 'core.php';
 $t_icon_path = config_get( 'icon_path' );
 $t_edit_icon_string = '<img class="start-inline-edit" src="' . $t_icon_path . 'update.png"/>';
 $t_submit_icon_string = '<img class="submit-inline-edit" src="' . $t_icon_path . 'ok.gif"/>';
+$t_security_token = form_security_token('filter_page_edit');
 
 ?>
 var FilterPageEdit = {
@@ -18,6 +19,7 @@ var FilterPageEdit = {
         
         var editableColumns = [];
         
+        // make editable as when clicking on the cell 
         bugTable.find('input[type=checkbox]').each(function() {
             var bugId = jQuery(this).val();
             var bugRow = jQuery(this).parent().parent();
@@ -30,6 +32,7 @@ var FilterPageEdit = {
             editableColumns[editableColumns.length] = editableColumn;
         });
         
+        // make editable when clicking on the header
         customFieldColumn.find('.start-inline-edit').click(function() {
             for ( var i = 0 ; i < editableColumns.length; i++ ) {
                 FilterPageEdit._makeEditable(editableColumns[i], customFieldColumn);
@@ -50,10 +53,11 @@ var FilterPageEdit = {
         jQueryCell.text('').append('<input type="text" value="' + oldText + '" id="' + identifier +'" name="' + identifier +'"/>');
         jQueryCell.unbind('click');
         
+        // install the submit icon and behaviour only once
         if ( headerCell.find('.submit-inline-edit').length == 0 ) {
             headerCell.append('<?php echo $t_submit_icon_string; ?>');
             headerCell.find('.submit-inline-edit').click(function() {
-                var submitValue = {};
+                var submitValue = {'filter_page_edit_token': '<?php echo $t_security_token ?>'};
                 jQuery('#buglist').find('[id|=inline-' + jQueryCell.data("fieldId")+']').each(function() {
                     submitValue[jQuery(this).attr('id')] =jQuery(this).val();
                 });
