@@ -39,6 +39,11 @@ var FilterPageEdit = {
     },
     
     _makeEditable: function(jQueryCell, headerCell) {
+    
+        // already editable
+        if ( jQueryCell.find('input').length != 0 ) {
+            return;
+        }
         var oldText = jQueryCell.text();
         jQueryCell.removeClass('inline-editable');
         var identifier = 'inline-' + jQueryCell.data("fieldId") +'-' + jQueryCell.data('bugId'); 
