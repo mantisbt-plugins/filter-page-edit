@@ -5,6 +5,8 @@ require_once 'core.php';
 
 $t_icon_path = config_get( 'icon_path' );
 $t_edit_icon_string = '<img class="start-inline-edit" src="' . $t_icon_path . 'update.png"/>';
+$t_submit_icon_string = '<img class="submit-inline-edit" src="' . $t_icon_path . 'ok.gif"/>';
+
 ?>
 var FilterPageEdit = {
     installCustomFieldEdit : function(fieldId, fieldName) {
@@ -22,7 +24,7 @@ var FilterPageEdit = {
             var editableColumn = bugRow.find('td:eq('+customFieldColumnIndex+')')
             editableColumn.data('bugId', bugId).data('fieldId', fieldId);
             editableColumn.addClass('inline-editable').click(function() {
-                FilterPageEdit._makeEditable(jQuery(this));
+                FilterPageEdit._makeEditable(jQuery(this), customFieldColumn);
             });
             
             editableColumns[editableColumns.length] = editableColumn;
@@ -30,19 +32,29 @@ var FilterPageEdit = {
         
         customFieldColumn.find('.start-inline-edit').click(function() {
             for ( var i = 0 ; i < editableColumns.length; i++ ) {
-                FilterPageEdit._makeEditable(editableColumns[i]);
+                FilterPageEdit._makeEditable(editableColumns[i], customFieldColumn);
             }
             jQuery(this).unbind('click');
         });
     },
     
-    _makeEditable: function(jQueryCell) {
+    _makeEditable: function(jQueryCell, headerCell) {
         var oldText = jQueryCell.text();
-        var bugId = jQueryCell.parent();
         jQueryCell.removeClass('inline-editable');
-        var identifier = 'inline-' + jQueryCell.data("bugId") +'-' + jQueryCell.data('fieldId'); 
+        var identifier = 'inline-' + jQueryCell.data("fieldId") +'-' + jQueryCell.data('bugId'); 
         jQueryCell.text('').append('<input type="text" value="' + oldText + '" id="' + identifier +'" name="' + identifier +'"/>');
         jQueryCell.unbind('click');
+        
+        if ( headerCell.find('.submit-inline-edit').length == 0 ) {
+            headerCell.append('<?php echo $t_submit_icon_string; ?>');
+            headerCell.find('.submit-inline-edit').click(function() {
+                var submitValue = {};
+                jQuery('#buglist').find('[id|=inline-' + jQueryCell.data("fieldId")+']').each(function() {
+                    submitValue[jQuery(this).attr('id')] =jQuery(this).val();
+                });
+                jQuery.post('<?php echo plugin_page('filter-page-process.php')?>', submitValue);
+            });
+        }
     }
 };
 jQuery(document).ready(function() {

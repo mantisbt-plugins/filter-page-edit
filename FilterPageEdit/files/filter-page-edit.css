@@ -1,8 +1,8 @@
-.inline-editable, .start-inline-edit {
+.inline-editable, .start-inline-edit, .submit-inline-edit {
 	cursor: pointer;	
 }
 
-.start-inline-edit {
+.start-inline-edit, .submit-inline-edit {
 	width: 16px;
 	height: 16px;
 	border: none;
