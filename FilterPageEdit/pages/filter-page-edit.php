@@ -8,9 +8,22 @@ $t_edit_icon_string = '<img class="start-inline-edit" src="' . $t_icon_path . 'u
 $t_submit_icon_string = '<img class="submit-inline-edit" src="' . $t_icon_path . 'ok.gif"/>';
 $t_security_token = form_security_token('filter_page_edit');
 
+$t_filter = current_user_get_bug_filter();
+$t_filter = filter_ensure_valid_filter( $t_filter );
+
+// find out which fields should already be rendered as editable
+$t_auto_editable_fields = FilterPageEditDao::getAutoEditFields();
+$t_filtered_custom_fields = FilterPageEditSelector::getFilteredCustomFields();
+$t_reveal_fields = array();
+
+foreach ( $t_auto_editable_fields as $t_source_field => $t_value_field ) {
+    if ( in_array( $t_source_field, $t_filtered_custom_fields) ) {
+        $t_reveal_fields[] = $t_value_field;
+    }
+}
 ?>
 var FilterPageEdit = {
-    installCustomFieldEdit : function(fieldId, fieldName) {
+    installCustomFieldEdit : function(fieldId, fieldName, displayEditable) {
         var bugTable = jQuery("#buglist");
         var headerRow = bugTable.find("tr.row-category");
         var customFieldColumn = headerRow.find("td:contains(" + fieldName + ")");
@@ -39,6 +52,10 @@ var FilterPageEdit = {
             }
             jQuery(this).unbind('click');
         });
+        
+        if ( displayEditable ) {
+            customFieldColumn.find('.start-inline-edit').click();
+        }
     },
     
     _makeEditable: function(jQueryCell, headerCell) {
@@ -74,7 +91,8 @@ jQuery(document).ready(function() {
 $f_custom_fields = explode( ',' , gpc_get_string( 'fields' ) );
 foreach ( $f_custom_fields as $t_custom_field_id ) {
     $t_custom_field = custom_field_get_definition( $t_custom_field_id );
-    echo "\tFilterPageEdit.installCustomFieldEdit('" . $t_custom_field['id'] ."', '" . $t_custom_field['name'] ."');\n";
+    $t_display_editable = in_array( $t_custom_field_id, $t_reveal_fields ) ? 'true': 'false';
+    echo "\tFilterPageEdit.installCustomFieldEdit('" . $t_custom_field['id'] ."', '" . $t_custom_field['name'] ."', ". $t_display_editable .");\n";
 }
 ?>
 });

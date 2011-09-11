@@ -40,6 +40,23 @@ class FilterPageEditPlugin extends MantisPlugin {
         );
     }
     
+    public function schema() {
+        
+        return array(
+            array( 'CreateTableSQL',
+                array( plugin_table( 'auto_editable_fields' ), "
+                    custom_field_id    I NOTNULL,
+                    target_field_id    I NOTNULL
+                ")
+            )
+        );
+    }
+    
+    public function init() {
+    
+        require_once 'FilterPageEdit.API.php';
+    }    
+    
     public function resources( $p_event ) {
         
         
@@ -66,7 +83,7 @@ class FilterPageEditPlugin extends MantisPlugin {
         
         return '<script type="text/javascript" src="' . plugin_page( 'filter-page-edit.php&amp;fields=' . $t_field_ids_string ) . '"></script>'.
             '<link rel="stylesheet" type="text/css" href="'. plugin_file('filter-page-edit.css') .'"></link>';
-    }    
+    }
 }
 
 ?>
