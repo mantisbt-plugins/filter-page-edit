@@ -25,6 +25,14 @@ foreach ( $t_auto_editable_fields as $t_source_field => $t_value_field ) {
 var FilterPageEdit = {
     installCustomFieldEdit : function(fieldId, fieldName, displayEditable) {
         var bugTable = jQuery("#buglist");
+        
+        var checkboxes = bugTable.find('input[type=checkbox]');
+        if ( checkboxes.length == 0 ) {
+            if ( console && console.error )
+                console.error("Unable to apply filtering as the 'selection' column is not present.");
+            return;
+        }
+        
         var headerRow = bugTable.find("tr.row-category");
         var customFieldColumn = headerRow.find("td:contains(" + fieldName + ")");
         var customFieldColumnIndex = headerRow.children().index(customFieldColumn);
@@ -33,7 +41,7 @@ var FilterPageEdit = {
         var editableColumns = [];
         
         // make editable as when clicking on the cell 
-        bugTable.find('input[type=checkbox]').each(function() {
+        checkboxes.each(function() {
             var bugId = jQuery(this).val();
             var bugRow = jQuery(this).parent().parent();
             var editableColumn = bugRow.find('td:eq('+customFieldColumnIndex+')')
