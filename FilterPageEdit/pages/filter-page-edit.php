@@ -115,7 +115,7 @@ $f_custom_fields = explode( ',' , gpc_get_string( 'fields' ) );
 foreach ( $f_custom_fields as $t_custom_field_id ) {
     $t_custom_field = custom_field_get_definition( $t_custom_field_id );
     $t_display_editable = in_array( $t_custom_field_id, $t_reveal_fields ) ? 'true': 'false';
-    echo "\tFilterPageEdit.installCustomFieldEdit('" . $t_custom_field['id'] ."', '" . $t_custom_field['name'] ."', ". $t_display_editable .");\n";
+    echo "\tFilterPageEdit.installCustomFieldEdit('" . $t_custom_field['id'] ."', '" . string_display( lang_get_defaulted( $t_custom_field['name'] ) )  ."', ". $t_display_editable .");\n";
 }
 ?>
 });
