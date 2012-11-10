@@ -41,7 +41,7 @@ var FilterPageEdit = {
     installCustomFieldEdit : function(fieldId, fieldName, displayEditable) {
         var bugTable = jQuery("#buglist");
         
-        var checkboxes = bugTable.find('input[type=checkbox][name=bug_arr[]]');
+        var checkboxes = bugTable.find('input[type=checkbox][name="bug_arr[]"]');
         if ( checkboxes.length == 0 ) {
             if ( console && console.error )
                 console.error("Unable to apply filtering as the 'selection' column is not present.");
