@@ -19,8 +19,11 @@ header ("Content-Type: text/javascript");
 require_once 'core.php';
 
 $t_icon_path = config_get_global( 'path' ) . 'images/';
-$t_edit_icon_string = '<img class="start-inline-edit" src="' . $t_icon_path . 'update.png"/>';
-$t_submit_icon_string = '<img class="submit-inline-edit" src="' . $t_icon_path . 'ok.gif"/>';
+$t_edit_icon_string = '&nbsp;&nbsp;&nbsp;<img class="start-inline-edit" src="' . $t_icon_path . 'FilterPageEditUpdate.png"/>';
+
+$t_submit_icon_string = '&nbsp;&nbsp;<img class="submit-inline-edit" src="' . $t_icon_path . 'FilterPageEditOk.png"/>';
+
+
 $t_security_token = form_security_token('filter_page_edit');
 
 $t_filter = current_user_get_bug_filter();
