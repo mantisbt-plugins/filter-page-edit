@@ -18,9 +18,12 @@ header ("Content-Type: text/javascript");
 
 require_once 'core.php';
 
-$t_icon_path = config_get( 'icon_path' );
-$t_edit_icon_string = '<img class="start-inline-edit" src="' . $t_icon_path . 'update.png"/>';
-$t_submit_icon_string = '<img class="submit-inline-edit" src="' . $t_icon_path . 'ok.gif"/>';
+$t_icon_path = config_get_global( 'path' ) . 'images/';
+$t_edit_icon_string = '&nbsp;&nbsp;&nbsp;<img class="start-inline-edit" src="' . $t_icon_path . 'FilterPageEditUpdate.png"/>';
+
+$t_submit_icon_string = '&nbsp;&nbsp;<img class="submit-inline-edit" src="' . $t_icon_path . 'FilterPageEditOk.png"/>';
+
+
 $t_security_token = form_security_token('filter_page_edit');
 
 $t_filter = current_user_get_bug_filter();
@@ -37,10 +40,11 @@ foreach ( $t_auto_editable_fields as $t_source_field => $t_value_field ) {
     }
 }
 ?>
+
 var FilterPageEdit = {
     installCustomFieldEdit : function(fieldId, fieldName, displayEditable) {
-        var bugTable = jQuery("#buglist");
         
+        var bugTable = jQuery("#buglist");
         var checkboxes = bugTable.find('input[type=checkbox][name="bug_arr[]"]');
         if ( checkboxes.length == 0 ) {
             if ( console && console.error )
@@ -48,9 +52,11 @@ var FilterPageEdit = {
             return;
         }
         
-        var headerRow = bugTable.find("tr.row-category");
-        var customFieldColumn = headerRow.find("td:contains(" + fieldName + ")");
+
+        var headerRow = bugTable.find("tr.buglist-headers");
+        var customFieldColumn = headerRow.find("th:contains(" + fieldName + ")");
         var customFieldColumnIndex = headerRow.children().index(customFieldColumn);
+
         customFieldColumn.append('<?php echo $t_edit_icon_string ?>');
         
         var editableColumns = [];
@@ -58,8 +64,13 @@ var FilterPageEdit = {
         // make editable as when clicking on the cell 
         checkboxes.each(function() {
             var bugId = jQuery(this).val();
-            var bugRow = jQuery(this).parent().parent();
-            var editableColumn = bugRow.find('td:eq('+customFieldColumnIndex+')')
+
+            // Mantis 2.x Layout has changed
+            var p = jQuery(this).parent().parent().parent();
+            var bugRow = p.parent();
+            var cx = customFieldColumnIndex;
+            var editableColumn = bugRow.find('td:eq('+cx+')')
+
             editableColumn.data('bugId', bugId).data('fieldId', fieldId);
             editableColumn.addClass('inline-editable').click(function() {
                 FilterPageEdit._makeEditable(jQuery(this), customFieldColumn);

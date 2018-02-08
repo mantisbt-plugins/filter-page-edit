@@ -23,10 +23,9 @@ class FilterPageEditPlugin extends MantisPlugin {
         $this->name = plugin_lang_get("title");
         $this->description = plugin_lang_get("description");
 
-        $this->version = "1.0";
+        $this->version = "2.0";
         $this->requires = array(
-			"MantisCore" => "1.2.6",
-			"jQuery" => "1.3"
+			"MantisCore" => "2.1",
         );
 
         $this->author = "Robert Munteanu";
